@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://unpkg.com/@catppuccin/palette/css/catppuccin.css");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+
+  display: grid;
+
+  height: 100vh;
+
+  color: rgba(255, 255, 255, 0.8);
+  background-color: var(--ctp-mocha-mantle);
+
+  place-items: center;
+}
+
+.game {
+  width: 65vmin;
+
+  border-radius: 10px;
+  background-color: var(--ctp-mocha-crust);
+}
+
+.game__details {
+  font-size: 1.2rem;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  padding: 1rem;
+
+  border-radius: 10px 10px 0 0;
+  background-color: var(--ctp-mocha-base);
+}
+
+.game__screen {
+  display: grid;
+
+  height: 70vmin;
+
+  grid-template: repeat(30, 1fr) / repeat(30, 1fr);
+}
+
+
+
+.snake__head {
+  background-color: var(--ctp-mocha-green);
+}
+
+.food {
+  background-color: var(--ctp-mocha-red);
+}
