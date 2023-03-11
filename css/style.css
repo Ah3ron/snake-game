@@ -52,7 +52,7 @@ body {
   grid-template: repeat(30, 1fr) / repeat(30, 1fr);
 }
 
-.snake__head {
+.snake__body {
   z-index: 99;
 
   background-color: var(--ctp-mocha-green);

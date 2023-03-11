@@ -26,28 +26,19 @@ let game = {
 };
 
 const input = (key) => {
-    switch (key.code) {
-        case "ArrowUp":
-            game.snake.direction.x = 0;
-            game.snake.direction.y = -1;
-            break;
-        case "ArrowDown":
-            game.snake.direction.x = 0;
-            game.snake.direction.y = 1;
-            break;
-        case "ArrowRight":
-            game.snake.direction.x = 1;
-            game.snake.direction.y = 0;
-            break;
-        case "ArrowLeft":
-            game.snake.direction.x = -1;
-            game.snake.direction.y = 0;
-            break;
-        default:
-            break;
+    if (key.code === "ArrowUp" && game.snake.direction.y != 1) {
+        game.snake.direction.x = 0;
+        game.snake.direction.y = -1;
+    } else if (key.code === "ArrowDown" && game.snake.direction.y != -1) {
+        game.snake.direction.x = 0;
+        game.snake.direction.y = 1;
+    } else if (key.code === "ArrowRight" && game.snake.direction.x != -1) {
+        game.snake.direction.x = 1;
+        game.snake.direction.y = 0;
+    } else if (key.code === "ArrowLeft" && game.snake.direction.x != 1) {
+        game.snake.direction.x = -1;
+        game.snake.direction.y = 0;
     }
-
-    initGame();
 };
 
 document.body.addEventListener("keydown", input);
@@ -68,22 +59,33 @@ const initGame = () => {
     );
 
     if (
+        game.snake.body[0].x < 1 ||
+        game.snake.body[0].x > game.MAX_X ||
+        game.snake.body[0].y < 1 ||
+        game.snake.body[0].y > game.MAX_Y
+    ) {
+        clearInterval(timer);
+        window.location.reload();
+    }
+
+    if (
         game.snake.body[0].x === game.food.x &&
         game.snake.body[0].y === game.food.y
     ) {
         game.food.changePos();
         game.snake.body.push({ ...game.snake.body[0] });
         game.score++;
+        console.log(game.score);
     }
 
     html += game.snake.body
         .map(
             (elem) =>
-                `<div class="snake__head" style="grid-area: ${elem.y} / ${elem.x}"></div>`
+                `<div class="snake__body" style="grid-area: ${elem.y} / ${elem.x}"></div>`
         )
         .join("");
 
     screen.innerHTML = html;
 };
 
-setInterval(initGame, 1000 / 8);
+const timer = setInterval(initGame, 1000 / 8);
