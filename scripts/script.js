@@ -3,6 +3,7 @@ const screen = document.querySelector(".game__screen");
 let game = {
     MAX_X: 30,
     MAX_Y: 30,
+
     snake: {
         body: [
             { x: 8, y: 12 },
@@ -14,6 +15,7 @@ let game = {
             y: 0,
         },
     },
+
     food: {
         x: 14,
         y: 14,
@@ -25,7 +27,15 @@ let game = {
     score: 0,
 };
 
-const input = (key) => {
+const initGame = () => {
+    document.addEventListener("keydown", handleInput);
+    updateSnakePosition();
+    handleCollisions();
+    updateScore();
+    render();
+};
+
+const handleInput = (key) => {
     if (key.code === "ArrowUp" && game.snake.direction.y != 1) {
         game.snake.direction.x = 0;
         game.snake.direction.y = -1;
@@ -41,11 +51,7 @@ const input = (key) => {
     }
 };
 
-document.body.addEventListener("keydown", input);
-
-const initGame = () => {
-    let html = `<div class="food" style="grid-area: ${game.food.y} / ${game.food.x}"></div>`;
-
+const updateSnakePosition = () => {
     game.snake.body = game.snake.body.map((elem, index) =>
         index === 0
             ? {
@@ -57,7 +63,9 @@ const initGame = () => {
                   y: game.snake.body[index - 1].y,
               }
     );
+};
 
+const handleCollisions = () => {
     if (
         game.snake.body[0].x < 1 ||
         game.snake.body[0].x > game.MAX_X ||
@@ -68,16 +76,21 @@ const initGame = () => {
         window.location.reload();
     }
 
-    if (
-        game.snake.body[0].x === game.food.x &&
-        game.snake.body[0].y === game.food.y
-    ) {
+    if (game.snake.body[0].x === game.food.x && game.snake.body[0].y === game.food.y) {
         game.food.changePos();
         game.snake.body.push({ ...game.snake.body[0] });
+    }
+};
+
+const updateScore = () => {
+    if (game.snake.body[0].x === game.food.x && game.snake.body[0].y === game.food.y) {
         game.score++;
         console.log(game.score);
     }
+};
 
+const render = () => {
+    let html = `<div class="food" style="grid-area: ${game.food.y} / ${game.food.x}"></div>`;
     html += game.snake.body
         .map(
             (elem) =>
@@ -88,4 +101,4 @@ const initGame = () => {
     screen.innerHTML = html;
 };
 
-const timer = setInterval(initGame, 1000 / 8);
+const timer = setInterval(initGame, 1000 / 9);
