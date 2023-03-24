@@ -34,6 +34,7 @@ const initGame = () => {
     document.addEventListener("keydown", handleInput);
     updateSnakePosition();
     checkWallCollision();
+    checkBodyCollision();
     checkFoodCollision();
     render();
 };
@@ -98,10 +99,21 @@ const checkFoodCollision = () => {
     }
 };
 
+const checkBodyCollision = () => {
+    for (let i = 1; i < game.snake.body.length; i++) {
+        if (
+            game.snake.body[i].x === game.snake.body[0].x &&
+            game.snake.body[i].y === game.snake.body[0].y
+        ) {
+            gameOver();
+        }
+    }
+};
+
 const updateScore = () => {
     game.score++;
 
-    // Calculating the speed of the game based 
+    // Calculating the speed of the game based
     // on the player's points using a power function.
     // Formula: fps ≈ √(score / 10) + 7
     game.fps = Math.round(Math.sqrt(game.score / 10)) + 7;
