@@ -1,8 +1,12 @@
 const screen = document.querySelector(".game__screen");
+const gameScore = document.querySelector(".game__score");
 
 let game = {
     MAX_X: 30,
     MAX_Y: 30,
+    fps: 7,
+
+    score: 3,
 
     snake: {
         body: [
@@ -24,14 +28,13 @@ let game = {
             this.y = Math.floor(Math.random() * game.MAX_Y) + 1;
         },
     },
-    score: 0,
 };
 
 const initGame = () => {
     document.addEventListener("keydown", handleInput);
     updateSnakePosition();
-    handleCollisions();
-    updateScore();
+    checkWallCollision();
+    checkFoodCollision();
     render();
 };
 
@@ -65,28 +68,45 @@ const updateSnakePosition = () => {
     );
 };
 
-const handleCollisions = () => {
+const checkWallCollision = () => {
     if (
         game.snake.body[0].x < 1 ||
         game.snake.body[0].x > game.MAX_X ||
         game.snake.body[0].y < 1 ||
         game.snake.body[0].y > game.MAX_Y
     ) {
-        clearInterval(timer);
-        window.location.reload();
+        gameOver();
+    }
+};
+
+const checkFoodCollision = () => {
+    if (game.snake.body[0].x === game.food.x && game.snake.body[0].y === game.food.y) {
+        game.snake.body.push({ ...game.snake.body[0] });
+        game.food.changePos();
+
+        updateScore();
+        return;
     }
 
-    if (game.snake.body[0].x === game.food.x && game.snake.body[0].y === game.food.y) {
-        game.food.changePos();
-        game.snake.body.push({ ...game.snake.body[0] });
+    for (let i = 1; i < game.snake.body.length; i++) {
+        if (
+            game.snake.body[i].x === game.food.x &&
+            game.snake.body[i].y === game.food.y
+        ) {
+            game.food.changePos();
+        }
     }
 };
 
 const updateScore = () => {
-    if (game.snake.body[0].x === game.food.x && game.snake.body[0].y === game.food.y) {
-        game.score++;
-        console.log(game.score);
-    }
+    game.score++;
+
+    // Calculating the speed of the game based 
+    // on the player's points using a power function.
+    // Formula: fps ≈ √(score / 10) + 7
+    game.fps = Math.round(Math.sqrt(game.score / 10)) + 7;
+
+    gameScore.innerHTML = `Score ${game.score}`;
 };
 
 const render = () => {
@@ -101,4 +121,9 @@ const render = () => {
     screen.innerHTML = html;
 };
 
-const timer = setInterval(initGame, 1000 / 9);
+const gameOver = () => {
+    clearInterval(timer);
+    window.location.reload();
+};
+
+const timer = setInterval(initGame, 1000 / game.fps);
