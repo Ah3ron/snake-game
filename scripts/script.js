@@ -1,5 +1,6 @@
 const screen = document.querySelector(".game__screen");
 const gameScore = document.querySelector(".game__score");
+const controls = document.querySelector(".game__controls");
 
 let game = {
     MAX_X: 30,
@@ -39,19 +40,34 @@ const initGame = () => {
     render();
 };
 
+const handleControlClick = (directionX, directionY) => {
+    if (game.snake.direction.x !== directionX && game.snake.direction.y !== directionY) {
+        game.snake.direction.x = directionX;
+        game.snake.direction.y = directionY;
+    }
+};
+
+controls.addEventListener("click", (event) => {
+    if (event.target.classList.contains("game__button--up")) {
+        handleControlClick(0, -1);
+    } else if (event.target.classList.contains("game__button--down")) {
+        handleControlClick(0, 1);
+    } else if (event.target.classList.contains("game__button--right")) {
+        handleControlClick(1, 0);
+    } else if (event.target.classList.contains("game__button--left")) {
+        handleControlClick(-1, 0);
+    }
+});
+
 const handleInput = (key) => {
-    if (key.code === "ArrowUp" && game.snake.direction.y != 1) {
-        game.snake.direction.x = 0;
-        game.snake.direction.y = -1;
-    } else if (key.code === "ArrowDown" && game.snake.direction.y != -1) {
-        game.snake.direction.x = 0;
-        game.snake.direction.y = 1;
-    } else if (key.code === "ArrowRight" && game.snake.direction.x != -1) {
-        game.snake.direction.x = 1;
-        game.snake.direction.y = 0;
-    } else if (key.code === "ArrowLeft" && game.snake.direction.x != 1) {
-        game.snake.direction.x = -1;
-        game.snake.direction.y = 0;
+    if (key.code === "ArrowUp") {
+        handleControlClick(0, -1);
+    } else if (key.code === "ArrowDown") {
+        handleControlClick(0, 1);
+    } else if (key.code === "ArrowRight") {
+        handleControlClick(1, 0);
+    } else if (key.code === "ArrowLeft") {
+        handleControlClick(-1, 0);
     }
 };
 
